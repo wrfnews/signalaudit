@@ -457,27 +457,6 @@ document.getElementById('printReportButton').addEventListener('click', function 
   window.print();
 });
 document.getElementById('year').textContent = new Date().getFullYear();
-</script>document.getElementById('contactForm').addEventListener('submit', function (event) {
-  event.preventDefault();
-
-  const name = document.getElementById('contactName').value.trim();
-  const email = document.getElementById('contactEmail').value.trim();
-  const message = document.getElementById('contactMessage').value.trim();
-
-  if (!name || !email || message.length < 10) {
-    document.getElementById('contactStatus').textContent =
-      'Please complete every field and write at least 10 characters.';
-    return;
-  }
-
-  const subject = 'SignalAudit enquiry from ' + name;
-  const body = 'Name: ' + name + '\nReply email: ' + email +
-    '\n\nMessage:\n' + message;
-
-  window.location.href =
-    'mailto:ethiokenya43@gmail.com?subject=' +
-    encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-  });
   </script>
   <section id="contact">
   <div class="container">
