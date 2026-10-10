@@ -9,7 +9,33 @@
 <meta property="og:title" content="SignalAudit — Website audits agencies can act on">
 <meta property="og:description" content="Turn website issues into clear next steps with practical, evidence-backed audit reports.">
 <title>SignalAudit — Website audits agencies can act on</title>
-<style>
+<style>.contact-form {
+  display: grid;
+  gap: 13px;
+  margin-top: 22px;
+  padding: 22px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+}
+.contact-form label { margin: 0; }
+.contact-form input,
+.contact-form textarea {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px 13px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+.contact-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
 :root { color-scheme: light dark; --bg: light-dark(#f7f8fc,#0b1020); --surface: light-dark(#ffffff,#121a2d); --surface2: light-dark(#eef2ff,#19243b); --text: light-dark(#11182a,#f4f6ff); --muted: light-dark(#5c667d,#a8b2ca); --line: light-dark(#dfe5f0,#2b3650); --accent: light-dark(#4f46e5,#a5a0ff); --accent2: light-dark(#312e81,#d6d3ff); --good: light-dark(#087f5b,#6ee7b7); --warn: light-dark(#b45309,#fbbf24); }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -431,6 +457,55 @@ document.getElementById('printReportButton').addEventListener('click', function 
   window.print();
 });
 document.getElementById('year').textContent = new Date().getFullYear();
-</script>
+</script>document.getElementById('contactForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const message = document.getElementById('contactMessage').value.trim();
+
+  if (!name || !email || message.length < 10) {
+    document.getElementById('contactStatus').textContent =
+      'Please complete every field and write at least 10 characters.';
+    return;
+  }
+
+  const subject = 'SignalAudit enquiry from ' + name;
+  const body = 'Name: ' + name + '\nReply email: ' + email +
+    '\n\nMessage:\n' + message;
+
+  window.location.href =
+    'mailto:ethiokenya43@gmail.com?subject=' +
+    encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+});
+  <section id="contact">
+  <div class="container">
+    <h2>Contact SignalAudit</h2>
+    <p>Email: <a href="mailto:ethiokenya43@gmail.com">ethiokenya43@gmail.com</a></p>
+
+    <form class="contact-form" id="contactForm">
+      <label>
+        Your name
+        <input id="contactName" required placeholder="Your name">
+      </label>
+
+      <label>
+        Your email
+        <input id="contactEmail" type="email" required placeholder="you@example.com">
+      </label>
+
+      <label>
+        Your message
+        <textarea id="contactMessage" required minlength="10"
+          placeholder="How can we help?"></textarea>
+      </label>
+
+      <button class="btn btn-primary" type="submit">Prepare email</button>
+      <p id="contactStatus" role="status">
+        Your email app will open so you can send your message.
+      </p>
+    </form>
+  </div>
+</section>
 </body>
 </html>
