@@ -9,33 +9,7 @@
 <meta property="og:title" content="SignalAudit — Website audits agencies can act on">
 <meta property="og:description" content="Turn website issues into clear next steps with practical, evidence-backed audit reports.">
 <title>SignalAudit — Website audits agencies can act on</title>
-<style>.contact-form {
-  display: grid;
-  gap: 13px;
-  margin-top: 22px;
-  padding: 22px;
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-}
-.contact-form label { margin: 0; }
-.contact-form input,
-.contact-form textarea {
-  display: block;
-  width: 100%;
-  margin-top: 6px;
-  padding: 12px 13px;
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  background: var(--bg);
-  color: var(--text);
-  font: inherit;
-}
-.contact-form textarea {
-  min-height: 110px;
-  resize: vertical;
-}
+<style>
 :root { color-scheme: light dark; --bg: light-dark(#f7f8fc,#0b1020); --surface: light-dark(#ffffff,#121a2d); --surface2: light-dark(#eef2ff,#19243b); --text: light-dark(#11182a,#f4f6ff); --muted: light-dark(#5c667d,#a8b2ca); --line: light-dark(#dfe5f0,#2b3650); --accent: light-dark(#4f46e5,#a5a0ff); --accent2: light-dark(#312e81,#d6d3ff); --good: light-dark(#087f5b,#6ee7b7); --warn: light-dark(#b45309,#fbbf24); }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -43,6 +17,9 @@ body { margin:0; background:var(--bg); color:var(--text); font-family:Inter,ui-s
 #app { min-height:100vh; width:100%; background-color:var(--bg); border-radius:0; }
 a { color:inherit; text-decoration:none; }
 button,input { font:inherit; }
+.skip-link { position:absolute; left:12px; top:-60px; z-index:1000; padding:10px 14px; border-radius:10px; background:var(--surface); color:var(--text); border:2px solid var(--accent); }
+.skip-link:focus { top:12px; }
+:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
 .container { width:min(1120px,calc(100% - 40px)); margin:auto; }
 nav { display:flex; justify-content:space-between; align-items:center; padding:22px 0; gap:24px; }
 .brand { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:-.04em; font-size:1.18rem; }
@@ -133,6 +110,10 @@ details p { color:var(--muted); font-size:.92rem; }
 footer { padding:30px 0; border-top:1px solid var(--line); color:var(--muted); font-size:.82rem; }
 .footer-row { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
 .status { min-height:1.3em; color:var(--muted); font-size:.85rem; margin-top:10px; }
+.contact-form { display:grid; gap:13px; margin-top:22px; padding:22px; background:var(--surface); color:var(--text); border:1px solid var(--line); border-radius:18px; }
+.contact-form label { margin:0; }
+.contact-form input,.contact-form textarea { display:block; width:100%; margin-top:6px; padding:12px 13px; border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--text); font:inherit; }
+.contact-form textarea { min-height:110px; resize:vertical; }
 .evidence-notes { display:block; width:100%; min-height:92px; resize:vertical; padding:12px 14px; border-radius:11px; border:1px solid var(--line); background:var(--bg); color:var(--text); font:inherit; }
 .metrics-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:14px; }
 .metrics-grid label { margin:0; }
@@ -160,6 +141,7 @@ footer { padding:30px 0; border-top:1px solid var(--line); color:var(--muted); f
 </head>
 <body>
 <div id="app">
+  <a class="skip-link" href="#top">Skip to main content</a>
   <div class="container">
     <nav>
       <a class="brand" href="#top" aria-label="SignalAudit home"><span class="logo">S</span> SignalAudit</a>
@@ -258,8 +240,16 @@ footer { padding:30px 0; border-top:1px solid var(--line); color:var(--muted); f
   </section>
   <section id="contact">
     <div class="container">
-      <div class="cta"><div><h2 style="margin:0;letter-spacing:-.04em">Help shape the first version.</h2><p>Looking for freelancers and small agencies willing to review a sample audit.</p></div><a class="btn" style="background:white;color:#17154d" href="#try">Preview the audit ↗</a></div>
-      <p class="micro" style="margin:12px 4px 0">Pilot contact is not configured yet. Before publishing, add a real business email or a working enquiry form; this preview does not send messages.</p>
+      <div class="cta"><div><h2 style="margin:0;letter-spacing:-.04em">Ready to discuss a website audit?</h2><p>Freelancers and small agencies are welcome to ask about the SignalAudit pilot or request a sample audit.</p><p><strong>Email:</strong> <a href="mailto:ethiokenya43@gmail.com">ethiokenya43@gmail.com</a></p></div><a class="btn" style="background:white;color:#17154d" href="#contactForm">Contact SignalAudit ↗</a></div>
+      <form class="contact-form" id="contactForm">
+        <h3 style="margin:0">Send an enquiry</h3>
+        <p class="micro" style="margin:0">Complete the form and your email app will open with the message prepared for you to send.</p>
+        <label for="contactName">Your name<input id="contactName" name="name" autocomplete="name" required placeholder="Name"></label>
+        <label for="contactEmail">Your email<input id="contactEmail" name="email" type="email" autocomplete="email" required placeholder="you@example.com"></label>
+        <label for="contactMessage">How can we help?<textarea id="contactMessage" name="message" required minlength="10" placeholder="Tell us about the website or audit you need."></textarea></label>
+        <div><button class="btn btn-primary" type="submit">Prepare email ↗</button></div>
+        <p class="hint" id="contactStatus" role="status" aria-live="polite">This static website opens your email app; it does not send or store form submissions.</p>
+      </form>
     </div>
   </section>
   <footer><div class="container footer-row"><a class="brand" href="#top"><span class="logo">S</span> SignalAudit</a><span>Independent prototype · Evidence before claims</span><span>© <span id="year">2026</span> SignalAudit</span></div></footer>
@@ -457,36 +447,20 @@ document.getElementById('printReportButton').addEventListener('click', function 
   window.print();
 });
 document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
-  <section id="contact">
-  <div class="container">
-    <h2>Contact SignalAudit</h2>
-    <p>Email: <a href="mailto:ethiokenya43@gmail.com">ethiokenya43@gmail.com</a></p>
-
-    <form class="contact-form" id="contactForm">
-      <label>
-        Your name
-        <input id="contactName" required placeholder="Your name">
-      </label>
-
-      <label>
-        Your email
-        <input id="contactEmail" type="email" required placeholder="you@example.com">
-      </label>
-
-      <label>
-        Your message
-        <textarea id="contactMessage" required minlength="10"
-          placeholder="How can we help?"></textarea>
-      </label>
-
-      <button class="btn btn-primary" type="submit">Prepare email</button>
-      <p id="contactStatus" role="status">
-        Your email app will open so you can send your message.
-      </p>
-    </form>
-  </div>
-</section>
-  </script>
+document.getElementById('contactForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+  const name = document.getElementById('contactName').value.trim();
+  const email = document.getElementById('contactEmail').value.trim();
+  const message = document.getElementById('contactMessage').value.trim();
+  if (!name || !email || message.length < 10) {
+    document.getElementById('contactStatus').textContent = 'Please complete every field and write a message of at least 10 characters.';
+    return;
+  }
+  const subject = 'SignalAudit enquiry from ' + name;
+  const body = 'Name: ' + name + '\nReply email: ' + email + '\n\nMessage:\n' + message;
+  document.getElementById('contactStatus').textContent = 'Your email app should open with the enquiry prepared. Review it and press Send there.';
+  window.location.href = 'mailto:ethiokenya43@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+});
+</script>
 </body>
 </html>
