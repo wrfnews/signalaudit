@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f7f8fc">
+<meta name="description" content="Create clear, client-ready website audit reports with prioritized, evidence-backed recommendations for freelancers and small agencies.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="SignalAudit — Website audits agencies can act on">
+<meta property="og:description" content="Turn website issues into clear next steps with practical, evidence-backed audit reports.">
+<title>SignalAudit — Website audits agencies can act on</title>
+<style>
+:root { color-scheme: light dark; --bg: light-dark(#f7f8fc,#0b1020); --surface: light-dark(#ffffff,#121a2d); --surface2: light-dark(#eef2ff,#19243b); --text: light-dark(#11182a,#f4f6ff); --muted: light-dark(#5c667d,#a8b2ca); --line: light-dark(#dfe5f0,#2b3650); --accent: light-dark(#4f46e5,#a5a0ff); --accent2: light-dark(#312e81,#d6d3ff); --good: light-dark(#087f5b,#6ee7b7); --warn: light-dark(#b45309,#fbbf24); }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; line-height:1.55; }
+#app { min-height:100vh; width:100%; background-color:var(--bg); border-radius:0; }
+a { color:inherit; text-decoration:none; }
+button,input { font:inherit; }
+.container { width:min(1120px,calc(100% - 40px)); margin:auto; }
+nav { display:flex; justify-content:space-between; align-items:center; padding:22px 0; gap:24px; }
+.brand { display:flex; align-items:center; gap:10px; font-weight:800; letter-spacing:-.04em; font-size:1.18rem; }
+.logo { display:grid; place-items:center; width:34px; height:34px; border-radius:11px; background:#4f46e5; color:white; font-weight:900; box-shadow:0 8px 24px #4f46e533; }
+.navlinks { display:flex; align-items:center; gap:26px; color:var(--muted); font-size:.92rem; }
+.btn { border:1px solid transparent; display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:12px 18px; border-radius:12px; font-weight:750; cursor:pointer; transition:transform .15s,opacity .15s; }
+.btn:hover { transform:translateY(-1px); }
+.btn-primary { background:#4f46e5; color:white; box-shadow:0 8px 22px #4f46e52b; }
+.btn-secondary { background:var(--surface); border-color:var(--line); color:var(--text); }
+.hero { padding:72px 0 62px; display:grid; grid-template-columns:1.05fr .95fr; gap:54px; align-items:center; }
+.eyebrow { display:inline-flex; gap:8px; align-items:center; padding:7px 11px; border:1px solid var(--line); border-radius:999px; color:var(--muted); font-size:.82rem; background:var(--surface); }
+.dot { width:7px;height:7px;border-radius:50%;background:#10b981; }
+h1 { font-size:clamp(2.65rem,5vw,4.55rem); line-height:1.03; letter-spacing:-.065em; margin:22px 0; max-width:720px; }
+.gradient { color:var(--accent); }
+.hero p { color:var(--muted); font-size:1.12rem; max-width:560px; }
+.hero-actions { display:flex; gap:12px; flex-wrap:wrap; margin:27px 0 16px; }
+.micro { font-size:.82rem!important; color:var(--muted); }
+.mock { background:var(--surface); border:1px solid var(--line); border-radius:24px; padding:22px; box-shadow:0 25px 75px #17255412; position:relative; }
+.mock-head { display:flex; justify-content:space-between; align-items:center; padding-bottom:17px; border-bottom:1px solid var(--line); }
+.pill { font-size:.75rem; padding:5px 9px; border-radius:99px; background:var(--surface2); color:var(--accent); font-weight:750; }
+.score-row { display:flex; align-items:center; gap:20px; padding:22px 0; }
+.score { width:92px;height:92px;border-radius:50%;display:grid;place-items:center; flex-shrink:0; background:conic-gradient(#4f46e5 0 78%,var(--line) 78% 100%); position:relative; }
+.score:before { content:""; position:absolute; inset:7px; border-radius:50%; background:var(--surface); }
+.score strong { z-index:1; font-size:1.6rem; }
+.score-row h3 { margin:0 0 3px; font-size:1.05rem; }
+.score-row p { margin:0; font-size:.85rem; }
+.finding { display:flex; align-items:flex-start; gap:12px; padding:13px 0; border-top:1px solid var(--line); }
+.finding-icon { width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--surface2);flex-shrink:0; }
+.finding strong { display:block; font-size:.88rem; }
+.finding small { color:var(--muted); font-size:.78rem; }
+section { padding:64px 0; }
+.section-head { max-width:680px; margin:0 auto 34px; text-align:center; }
+.section-head h2 { font-size:clamp(1.9rem,3.6vw,2.8rem); letter-spacing:-.05em; line-height:1.1; margin:0 0 13px; }
+.section-head p { color:var(--muted); margin:0; }
+.trust { display:flex; justify-content:center; gap:32px; flex-wrap:wrap; color:var(--muted); font-size:.88rem; padding:16px 0 30px; border-bottom:1px solid var(--line); }
+.grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.card { background:var(--surface); border:1px solid var(--line); border-radius:18px; padding:23px; }
+.card .icon { font-size:1.45rem; margin-bottom:15px; }
+.card h3 { margin:0 0 8px; font-size:1.05rem; }
+.card p { color:var(--muted); font-size:.92rem; margin:0; }
+.audit-section { background:var(--surface2); border-block:1px solid var(--line); }
+.audit-layout { display:grid; grid-template-columns:.85fr 1.15fr; gap:36px; align-items:start; }
+.audit-copy h2 { font-size:clamp(2rem,4vw,3rem); line-height:1.08; letter-spacing:-.05em; margin:0 0 15px; }
+.audit-copy p { color:var(--muted); }
+.audit-form { padding:24px; background:var(--surface); border:1px solid var(--line); border-radius:20px; }
+label { display:block; font-weight:700; font-size:.86rem; margin-bottom:7px; }
+.input-row { display:flex; gap:10px; }
+input[type=url] { width:100%; min-width:0; padding:13px 14px; border-radius:11px; border:1px solid var(--line); background:var(--bg); color:var(--text); outline:none; }
+input:focus { border-color:var(--accent); box-shadow:0 0 0 3px #4f46e51c; }
+.hint { color:var(--muted); font-size:.78rem; margin:9px 0 0; }
+.checklist { margin-top:18px; padding-top:16px; border-top:1px solid var(--line); }
+.checklist legend { font-weight:800; font-size:.9rem; margin-bottom:8px; }
+.check-option { display:flex; align-items:flex-start; gap:9px; margin:11px 0; font-weight:500; font-size:.86rem; }
+.check-option input { margin-top:5px; accent-color:#4f46e5; }
+.check-option span { display:block; }
+.check-option small { display:block; color:var(--muted); font-size:.77rem; }
+#report { display:none; margin-top:20px; border-top:1px solid var(--line); padding-top:20px; }
+.report-top { display:flex; justify-content:space-between; gap:15px; align-items:center; }
+.report-top h3 { margin:0; overflow-wrap:anywhere; }
+.report-list { display:grid; gap:10px; margin-top:15px; }
+.report-item { border:1px solid var(--line); border-radius:12px; padding:13px; display:grid; grid-template-columns:auto 1fr; gap:11px; }
+.severity { font-size:.72rem; font-weight:800; border-radius:7px; padding:4px 7px; height:max-content; }
+.high { color:var(--warn); background:light-dark(#fff7ed,#42220e); }
+.medium { color:var(--accent); background:var(--surface2); }
+.report-item strong { font-size:.88rem; display:block; }
+.report-item p { font-size:.82rem; color:var(--muted); margin:3px 0 0; }
+.disclaimer { font-size:.78rem; color:var(--muted); margin-top:13px; }
+.steps { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; counter-reset:step; }
+.step { padding:22px 0; border-top:1px solid var(--line); counter-increment:step; }
+.step:before { content:"0" counter(step); color:var(--accent); font-weight:850; font-size:.82rem; }
+.step h3 { margin:10px 0 6px; }
+.step p { margin:0; color:var(--muted); font-size:.9rem; }
+.price-wrap { max-width:720px; margin:auto; display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.price { padding:26px; background:var(--surface); border:1px solid var(--line); border-radius:20px; }
+.price.featured { border:2px solid var(--accent); position:relative; }
+.price h3 { margin:0 0 5px; }
+.price .amount { font-size:2.5rem; font-weight:850; letter-spacing:-.06em; margin:10px 0 0; }
+.price .sub { color:var(--muted); font-size:.84rem; }
+.price ul { padding-left:20px; color:var(--muted); font-size:.9rem; min-height:125px; }
+.price li { margin:8px 0; }
+.price .btn { width:100%; }
+.faq { max-width:760px; margin:auto; }
+details { border-bottom:1px solid var(--line); padding:18px 0; }
+summary { cursor:pointer; font-weight:750; }
+details p { color:var(--muted); font-size:.92rem; }
+.cta { background:#17154d; color:white; border-radius:24px; padding:42px; display:flex; justify-content:space-between; align-items:center; gap:25px; }
+.cta p { color:#c9c7ef; margin-bottom:0; }
+footer { padding:30px 0; border-top:1px solid var(--line); color:var(--muted); font-size:.82rem; }
+.footer-row { display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; }
+.status { min-height:1.3em; color:var(--muted); font-size:.85rem; margin-top:10px; }
+.evidence-notes { display:block; width:100%; min-height:92px; resize:vertical; padding:12px 14px; border-radius:11px; border:1px solid var(--line); background:var(--bg); color:var(--text); font:inherit; }
+.metrics-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:14px; }
+.metrics-grid label { margin:0; }
+.metrics-grid input { display:block; width:100%; min-width:0; margin-top:6px; padding:11px 12px; border-radius:10px; border:1px solid var(--line); background:var(--bg); color:var(--text); }
+#printReport { display:none; }
+@media print {
+  @page { size:A4; margin:18mm; }
+  body { background:#fff!important; color:#172033!important; color-scheme:light; }
+  body * { visibility:hidden!important; }
+  #printReport, #printReport * { visibility:visible!important; }
+  #printReport { display:block!important; position:absolute; inset:0 auto auto 0; width:100%; color:#172033!important; background:#fff!important; font:10.5pt/1.5 Arial,sans-serif; }
+  #printReport h1 { font-size:25pt; letter-spacing:-.04em; margin:0 0 6pt; }
+  #printReport h2 { font-size:14pt; margin:20pt 0 7pt; border-bottom:1px solid #d8deea; padding-bottom:5pt; }
+  #printReport .print-meta { color:#586174; font-size:9pt; overflow-wrap:anywhere; }
+  #printReport .print-item { border:1px solid #d8deea; border-radius:7pt; padding:10pt; margin:8pt 0; break-inside:avoid; }
+  #printReport .print-item strong { display:block; margin-bottom:3pt; }
+  #printReport p { margin:5pt 0; overflow-wrap:anywhere; }
+  #printReport .print-note { white-space:pre-wrap; overflow-wrap:anywhere; }
+  #printReport .print-disclaimer { margin-top:22pt; padding-top:9pt; border-top:1px solid #d8deea; font-size:8.5pt; color:#586174; }
+}
+@media(max-width:800px) { .hero,.audit-layout { grid-template-columns:1fr; } .hero { padding-top:45px; gap:32px; } .grid3 { grid-template-columns:1fr; } .steps { grid-template-columns:1fr; gap:0; } .navlinks a:not(.btn) { display:none; } .price-wrap { grid-template-columns:1fr; } .cta { flex-direction:column; align-items:flex-start; padding:30px; } }
+@media(max-width:480px) { .container { width:min(100% - 28px,1120px); } .input-row { flex-direction:column; } .input-row .btn { width:100%; } .mock { padding:16px; } .score-row { gap:13px; } }
+@media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="container">
+    <nav>
+      <a class="brand" href="#top" aria-label="SignalAudit home"><span class="logo">S</span> SignalAudit</a>
+      <div class="navlinks"><a href="#how">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a class="btn btn-primary" href="#try">Try the demo ↗</a></div>
+    </nav>
+    <main id="top">
+      <div class="hero">
+        <div>
+          <span class="eyebrow"><span class="dot"></span> Built for freelancers & small agencies</span>
+          <h1>Turn website issues into <span class="gradient">clear next steps.</span></h1>
+          <p>Client-ready website audit reports that help you explain what needs fixing, why it matters, and what to do first — without drowning clients in technical jargon.</p>
+          <div class="hero-actions"><a class="btn btn-primary" href="#try">Preview an audit <span aria-hidden="true">→</span></a><a class="btn btn-secondary" href="#pricing">See the pilot offer</a></div>
+          <p class="micro">Designed for practical hand-offs. No client passwords required.</p>
+        </div>
+        <div class="mock" aria-label="Illustrative audit report preview">
+          <div class="mock-head"><div><strong>Website health snapshot</strong><div class="micro">example.com · Sample preview</div></div><span class="pill">DEMO REPORT</span></div>
+          <div class="score-row"><div class="score"><strong>78</strong></div><div><h3>A clear path to improve</h3><p class="micro">Illustrative score only — not a live scan.</p></div></div>
+          <div class="finding"><div class="finding-icon">⚡</div><div><strong>Performance opportunity</strong><small>Check image weight and render-blocking assets.</small></div></div>
+          <div class="finding"><div class="finding-icon">⌕</div><div><strong>Search visibility</strong><small>Review page title, meta description and headings.</small></div></div>
+          <div class="finding"><div class="finding-icon">↗</div><div><strong>Conversion clarity</strong><small>Make the primary call to action easy to spot.</small></div></div>
+        </div>
+      </div>
+      <div class="trust"><span>✓ Prioritized recommendations</span><span>✓ Plain-language explanations</span><span>✓ Agency-friendly format</span><span>✓ Human-reviewed pilot</span></div>
+    </main>
+  </div>
+  <section>
+    <div class="container">
+      <div class="section-head"><h2>Not another wall of technical warnings.</h2><p>Give clients a report they can understand — and give your team a practical place to start.</p></div>
+      <div class="grid3">
+        <article class="card"><div class="icon">🎯</div><h3>Know what to fix first</h3><p>Group findings by impact and effort so the next action is easier to agree on.</p></article>
+        <article class="card"><div class="icon">🗣️</div><h3>Explain it to clients</h3><p>Turn technical observations into clear language you can use in a client conversation.</p></article>
+        <article class="card"><div class="icon">📄</div><h3>Deliver a polished hand-off</h3><p>Use a consistent report structure for discovery calls, proposals and ongoing retainers.</p></article>
+      </div>
+    </div>
+  </section>
+  <section class="audit-section" id="try">
+    <div class="container audit-layout">
+      <div class="audit-copy"><span class="eyebrow">Interactive prototype</span><h2>See what a report could look like.</h2><p>Enter a public website URL to generate a sample report layout. This prototype runs locally and does not scan the live website yet; the findings below are illustrative.</p><p><strong>Next milestone:</strong> connect trusted performance and page-inspection tools, then validate findings before delivery.</p></div>
+      <div class="audit-form">
+        <form id="auditForm">
+          <label for="siteUrl">Public website URL</label>
+          <div class="input-row"><input id="siteUrl" type="url" placeholder="https://your-client-site.com" required aria-describedby="urlHint"><button class="btn btn-primary" type="submit">Generate demo</button></div>
+          <p class="hint" id="urlHint">Use a site you own or have permission to review. Do not enter passwords or private URLs.</p>
+          <p style="margin:12px 0 0"><button class="btn btn-secondary" id="openPageSpeed" type="button">Run a real PageSpeed test ↗</button></p>
+          <p class="hint">Opens Google PageSpeed Insights in a new tab. Run the test there, then enter its results below. SignalAudit does not fetch those results automatically.</p>
+          <fieldset class="checklist" style="border:0;padding-left:0;padding-right:0;padding-bottom:0;margin-bottom:0">
+            <legend>Human review checklist</legend>
+            <p class="hint">Select only items you have personally checked. These selections will appear in your draft report.</p>
+            <label class="check-option"><input type="checkbox" name="finding" value="cta"><span>Primary call to action needs review<small>Record what you observed on the page.</small></span></label>
+            <label class="check-option"><input type="checkbox" name="finding" value="metadata"><span>Page title or meta description needs review<small>Confirm with the page source or an inspection tool.</small></span></label>
+            <label class="check-option"><input type="checkbox" name="finding" value="mobile"><span>Mobile performance needs measurement<small>Run a real performance test before claiming a problem.</small></span></label>
+            <label class="check-option"><input type="checkbox" name="finding" value="headings"><span>Heading structure needs review<small>Check heading order and whether the main topic is clear.</small></span></label>
+          </fieldset>
+          <div style="margin-top:16px"><label for="evidenceNotes">Evidence and observations</label><textarea id="evidenceNotes" class="evidence-notes" placeholder="Example: On the homepage, the main CTA is below the first screen on mobile. Add the page section, exact text, test result, or screenshot reference you checked."></textarea><p class="hint">Keep notes factual. Include the page checked and how you verified each finding.</p></div>
+          <div class="checklist"><strong>Optional performance evidence</strong><p class="hint">Run a real test first, for example with Google PageSpeed Insights, then enter the results exactly as shown. These fields do not run a test.</p><div class="metrics-grid"><label for="testDevice">Test device<div><select id="testDevice" style="width:100%;margin-top:6px;padding:11px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text)"><option value="Not specified">Not specified</option><option value="Mobile">Mobile</option><option value="Desktop">Desktop</option></select></div></label><label for="performanceScore">Performance score (0–100)<input id="performanceScore" type="number" min="0" max="100" step="1" placeholder="e.g. 82"></label><label for="lcpValue">LCP (seconds)<input id="lcpValue" type="number" min="0" step="0.1" placeholder="e.g. 2.4"></label><label for="clsValue">CLS (score)<input id="clsValue" type="number" min="0" step="0.01" placeholder="e.g. 0.08"></label><label for="inpValue">INP (milliseconds)<input id="inpValue" type="number" min="0" step="1" placeholder="e.g. 180"></label><label for="testReference">Test report URL<input id="testReference" type="url" placeholder="https://pagespeed.web.dev/..."></label></div></div>
+        </form>
+        <div id="report" aria-live="polite">
+          <div class="report-top"><div><span class="pill">SAMPLE OUTPUT</span><h3 id="reportDomain" style="margin-top:9px">Website report</h3></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button id="copyReport" class="btn btn-secondary" type="button">Copy summary</button><button id="downloadReport" class="btn btn-secondary" type="button">Download .txt</button><button id="printReportButton" class="btn btn-primary" type="button">Print / Save PDF</button></div></div>
+          <p class="micro" id="reportNote">Draft report. Only select findings you have actually reviewed; add evidence before sending this to a client.</p>
+          <div class="report-list" id="reportList"><p class="hint">Generate the draft to see the selected review items here.</p></div>
+          <div id="evidencePreview" class="disclaimer"></div><p class="disclaimer">This prototype does not fetch or inspect the URL. The report reflects your selections and your notes, not an automated scan. Verify evidence before delivery.</p>
+        </div>
+        <div class="status" id="formStatus" role="status"></div>
+      </div>
+    </div>
+  </section>
+  <section id="how">
+    <div class="container">
+      <div class="section-head"><h2>A simple workflow, built around trust.</h2><p>Start as a service. Automate only what customers repeatedly need.</p></div>
+      <div class="steps">
+        <div class="step"><h3>Submit a public URL</h3><p>The customer chooses a site they own or are authorized to review. No login credentials are collected.</p></div>
+        <div class="step"><h3>Validate the evidence</h3><p>Combine trusted checks with a human review. Remove generic or unsupported recommendations.</p></div>
+        <div class="step"><h3>Deliver a clear report</h3><p>Prioritize issues, explain the business impact carefully, and suggest the next action.</p></div>
+      </div>
+    </div>
+  </section>
+  <section id="pricing" style="background:var(--surface2);border-block:1px solid var(--line)">
+    <div class="container">
+      <div class="section-head"><h2>Early-access pricing to test</h2><p>These are proposed pilot prices, not proven market rates. Confirm demand with real customers before investing in automation.</p></div>
+      <div class="price-wrap">
+        <article class="price"><span class="pill">FREE PREVIEW</span><h3 style="margin-top:13px">Quick look</h3><div class="amount">$0</div><div class="sub">For starting a conversation</div><ul><li>Short sample summary</li><li>One public website URL</li><li>No guarantee of a full audit</li></ul><a class="btn btn-secondary" href="#try">Try the demo</a></article>
+        <article class="price featured"><span class="pill">PROPOSED PILOT</span><h3 style="margin-top:13px">Starter audit</h3><div class="amount">$19</div><div class="sub">One-time introductory offer</div><ul><li>Homepage + one key page</li><li>3–5 evidence-backed findings</li><li>Prioritized action plan</li><li>Client-ready PDF or document</li></ul><a class="btn btn-primary" href="#try">Preview the demo ↗</a></article>
+      </div>
+    </div>
+  </section>
+  <section id="faq">
+    <div class="container">
+      <div class="section-head"><h2>Frequently asked questions</h2><p>Clear expectations matter more than impressive claims.</p></div>
+      <div class="faq">
+        <details><summary>Does the demo scan my live website?</summary><p>No. The current prototype creates illustrative sample findings in your browser. It does not make network requests or verify anything about the URL.</p></details>
+        <details><summary>Is this a replacement for a technical SEO audit?</summary><p>No. The intended product is a practical, evidence-backed starting point. Technical conclusions should be validated with appropriate tools and expert review.</p></details>
+        <details><summary>Can agencies use reports with their own clients?</summary><p>That is a core use case to validate. Before offering white-label or client redistribution features, agree on scope, attribution, data handling and report quality.</p></details>
+        <details><summary>What happens after the pilot?</summary><p>Early customers help identify which checks and report sections are genuinely useful. Automation should follow repeated customer needs, not precede validation.</p></details>
+      </div>
+    </div>
+  </section>
+  <section id="contact">
+    <div class="container">
+      <div class="cta"><div><h2 style="margin:0;letter-spacing:-.04em">Help shape the first version.</h2><p>Looking for freelancers and small agencies willing to review a sample audit.</p></div><a class="btn" style="background:white;color:#17154d" href="#try">Preview the audit ↗</a></div>
+      <p class="micro" style="margin:12px 4px 0">Pilot contact is not configured yet. Before publishing, add a real business email or a working enquiry form; this preview does not send messages.</p>
+    </div>
+  </section>
+  <footer><div class="container footer-row"><a class="brand" href="#top"><span class="logo">S</span> SignalAudit</a><span>Independent prototype · Evidence before claims</span><span>© <span id="year">2026</span> SignalAudit</span></div></footer>
+</div>
+<section id="printReport" aria-label="Printable SignalAudit report">
+  <h1>SignalAudit</h1>
+  <p class="print-meta" id="printReportUrl"></p>
+  <p class="print-meta" id="printReportDate"></p>
+  <h2>Prioritized review findings</h2>
+  <div id="printReportFindings"></div>
+  <h2>Evidence and observations</h2>
+  <p class="print-note" id="printReportEvidence"></p>
+  <h2>Performance evidence</h2>
+  <div id="printReportMetrics"></div>
+  <p class="print-disclaimer">Draft only. SignalAudit did not scan or independently verify this website. Findings reflect the selected review items and user-entered notes or metrics. Verify all evidence before sharing with a client.</p>
+</section>
+<script>
+const form = document.getElementById('auditForm');
+const urlInput = document.getElementById('siteUrl');
+const report = document.getElementById('report');
+const status = document.getElementById('formStatus');
+const reportDomain = document.getElementById('reportDomain');
+const reportList = document.getElementById('reportList');
+const evidenceNotes = document.getElementById('evidenceNotes');
+const evidencePreview = document.getElementById('evidencePreview');
+const performanceFields = ['testDevice', 'performanceScore', 'lcpValue', 'clsValue', 'inpValue', 'testReference'];
+function isPublicWebUrl(parsed) {
+  if (!['http:', 'https:'].includes(parsed.protocol) || !parsed.hostname || parsed.username || parsed.password) return false;
+  const host = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, '');
+  if (host === 'localhost' || host.endsWith('.localhost') || host.endsWith('.local') || host.endsWith('.internal') || /\.(example|test|invalid)$/.test(host)) return false;
+  if (host === '::' || host === '::1' || host.startsWith('fe8') || host.startsWith('fe9') || host.startsWith('fea') || host.startsWith('feb') || host.startsWith('fc') || host.startsWith('fd')) return false;
+  const octets = host.split('.');
+  if (octets.length === 4 && octets.every(part => /^\d{1,3}$/.test(part) && Number(part) <= 255)) {
+    const [a,b] = octets.map(Number);
+    if (a === 0 || a === 10 || a === 127 || a >= 224 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || (a === 100 && b >= 64 && b <= 127)) return false;
+  }
+  return host.includes('.') && !host.endsWith('.');
+}
+document.getElementById('openPageSpeed').addEventListener('click', function () {
+  const raw = urlInput.value.trim();
+  let parsed;
+  try { parsed = new URL(raw); } catch (_) {
+    status.textContent = 'Enter a complete public website URL before opening PageSpeed Insights.';
+    urlInput.focus();
+    return;
+  }
+  if (!isPublicWebUrl(parsed)) {
+    status.textContent = 'Please enter a valid public http or https website URL.';
+    urlInput.focus();
+    return;
+  }
+  const reportUrl = 'https://pagespeed.web.dev/analysis?url=' + encodeURIComponent(parsed.href);
+  window.open(reportUrl, '_blank', 'noopener,noreferrer');
+  status.textContent = 'PageSpeed Insights opened in a new tab. Run the test there and enter its values manually below.';
+});
+const findingDetails = {
+  cta: { title: 'Review the primary call to action', note: 'Document the exact page location and what makes the next step unclear. Suggest one specific improvement.', priority: 'PRIORITIZE', impact: 'Potentially affects visitor understanding and conversion; validate against the page goal.', effort: 'Low to medium', action: 'Record the current CTA text and location, then draft one clearer, goal-aligned alternative.' },
+  metadata: { title: 'Validate title and meta description', note: 'Record the current title and description, then recommend a page-specific version if needed.', priority: 'VERIFY', impact: 'May affect search-result relevance and click-through; results depend on search engines and context.', effort: 'Low', action: 'Capture the current title and description, compare them with page intent, and draft specific replacements if warranted.' },
+  mobile: { title: 'Measure mobile performance', note: 'Run a real test and attach its URL or metrics. Do not claim a performance defect without evidence.', priority: 'MEASURE', impact: 'Unknown until a real test is run; avoid claiming a speed issue from this checklist alone.', effort: 'Low to measure; fixes vary', action: 'Run PageSpeed Insights on mobile, save the test URL, and record the observed metrics before proposing fixes.' },
+  headings: { title: 'Review heading structure', note: 'Record the heading order and propose a clearer structure tied to the page purpose.', priority: 'VERIFY', impact: 'May affect content clarity and accessibility; verify the actual heading order first.', effort: 'Low to medium', action: 'Inspect the rendered headings, record their order, and suggest a hierarchy that reflects the page content.' }
+};
+form.addEventListener('submit', function (event) {
+  event.preventDefault();
+  const raw = urlInput.value.trim();
+  let parsed;
+  try { parsed = new URL(raw); } catch (_) {
+    status.textContent = 'Please enter a complete URL, such as https://example.com.';
+    report.style.display = 'none';
+    return;
+  }
+  if (!isPublicWebUrl(parsed)) {
+    status.textContent = 'Please use a public website URL with http or https, not a local, private, example, or credential-bearing URL.';
+    report.style.display = 'none';
+    return;
+  }
+  reportDomain.textContent = parsed.hostname;
+  const metricValues = performanceFields.map(id => [id, document.getElementById(id).value.trim()]).filter(([id, value]) => value && !['testDevice'].includes(id));
+  const scoreInput = document.getElementById('performanceScore');
+  if (scoreInput.value !== '' && (+scoreInput.value < 0 || +scoreInput.value > 100)) { status.textContent = 'Performance score must be between 0 and 100.'; report.style.display = 'none'; scoreInput.focus(); return; }
+  if (['lcpValue', 'clsValue', 'inpValue'].some(id => document.getElementById(id).value !== '' && +document.getElementById(id).value < 0)) { status.textContent = 'Performance metrics cannot be negative.'; report.style.display = 'none'; return; }
+  const evidenceParts = [];
+  if (evidenceNotes.value.trim()) evidenceParts.push('Your evidence notes: ' + evidenceNotes.value.trim());
+  if (metricValues.length) evidenceParts.push('Manually entered performance evidence (' + document.getElementById('testDevice').value + '): ' + metricValues.map(([id, value]) => ({performanceScore:'Score',lcpValue:'LCP seconds',clsValue:'CLS',inpValue:'INP milliseconds',testReference:'Test report URL'}[id] + ': ' + value)).join('; '));
+  evidencePreview.textContent = evidenceParts.length ? evidenceParts.join(' | ') : 'No evidence notes or performance metrics added yet. Add verified observations before sharing this draft.';
+  const selected = Array.from(form.querySelectorAll('input[name="finding"]:checked')).map(input => findingDetails[input.value]);
+  reportList.replaceChildren();
+  if (!selected.length) {
+    const empty = document.createElement('p');
+    empty.className = 'hint';
+    empty.textContent = 'No review items selected. Select the checks you have performed, then generate the draft again.';
+    reportList.appendChild(empty);
+  } else {
+    selected.forEach(item => {
+      const row = document.createElement('div');
+      row.className = 'report-item';
+      const tag = document.createElement('span');
+      tag.className = 'severity medium';
+      tag.textContent = item.priority;
+      const content = document.createElement('div');
+      const title = document.createElement('strong');
+      title.textContent = item.title;
+      const note = document.createElement('p');
+      note.textContent = item.note;
+      const details = document.createElement('p');
+      details.textContent = 'Potential impact: ' + item.impact + ' Effort: ' + item.effort + '. Evidence status: ' + (evidenceNotes.value.trim() ? 'Notes supplied; not independently verified.' : 'Evidence not yet recorded.');
+      const action = document.createElement('p');
+      action.textContent = 'Recommended next action: ' + item.action;
+      content.append(title, note, details, action);
+      row.append(tag, content);
+      reportList.appendChild(row);
+    });
+  }
+  report.style.display = 'block';
+  status.textContent = 'Draft generated from your selected review items. No live website scan was performed.';
+  report.scrollIntoView({behavior:'smooth', block:'nearest'});
+});
+function buildReportText() {
+  const rows = Array.from(reportList.querySelectorAll('.report-item')).map((row, index) => {
+    const title = row.querySelector('strong')?.textContent || 'Review item';
+    const paragraphs = Array.from(row.querySelectorAll('p')).map(p => p.textContent || '');
+    return (index + 1) + '. ' + title + '\n   Finding: ' + (paragraphs[0] || '') + '\n   Assessment: ' + (paragraphs[1] || '') + '\n   Recommended next action: ' + (paragraphs[2] || '');
+  });
+  const evidence = evidenceNotes.value.trim();
+  const metrics = performanceFields.map(id => [id, document.getElementById(id).value.trim()]).filter(([id, value]) => value && id !== 'testDevice').map(([id, value]) => ({performanceScore:'Performance score (0–100)',lcpValue:'LCP (seconds)',clsValue:'CLS',inpValue:'INP (milliseconds)',testReference:'Test report URL'}[id] + ': ' + value));
+  return 'SignalAudit draft report for ' + reportDomain.textContent + '\nGenerated: ' + new Date().toLocaleString() + '\n\n' + (rows.length ? rows.join('\n\n') : 'No review items selected.') + '\n\nEvidence and observations:\n' + (evidence || 'None added.') + '\n\nPerformance evidence (' + document.getElementById('testDevice').value + '):\n' + (metrics.length ? metrics.join('\n') : 'No performance metrics entered.') + '\n\nDraft only. No live website scan was performed by SignalAudit. Performance values are user-entered and have not been independently verified.';
+}
+document.getElementById('copyReport').addEventListener('click', async function () {
+  const text = buildReportText();
+  try {
+    await navigator.clipboard.writeText(text);
+    status.textContent = 'Sample summary copied.';
+  } catch (_) {
+    status.textContent = 'Clipboard access is unavailable here. Select and copy the visible report instead.';
+  }
+});
+document.getElementById('downloadReport').addEventListener('click', function () {
+  const text = buildReportText();
+  const blob = new Blob([text], {type:'text/plain;charset=utf-8'});
+  const objectUrl = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  const safeDomain = (reportDomain.textContent || 'website').replace(/[^a-z0-9.-]/gi, '-');
+  link.href = objectUrl;
+  link.download = 'signalaudit-' + safeDomain + '-draft.txt';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(objectUrl);
+  status.textContent = 'Draft text file download requested. Review it before sharing with a client.';
+});
+document.getElementById('printReportButton').addEventListener('click', function () {
+  if (report.style.display === 'none' || !report.style.display) {
+    status.textContent = 'Generate the draft report before printing or saving it as PDF.';
+    return;
+  }
+  const printableUrl = document.getElementById('printReportUrl');
+  printableUrl.textContent = 'Website: ' + (urlInput.value.trim() || reportDomain.textContent);
+  document.getElementById('printReportDate').textContent = 'Prepared: ' + new Date().toLocaleString();
+  const printableFindings = document.getElementById('printReportFindings');
+  printableFindings.replaceChildren();
+  const items = Array.from(reportList.querySelectorAll('.report-item'));
+  if (!items.length) {
+    const empty = document.createElement('p');
+    empty.textContent = 'No review items selected. Add verified findings before client delivery.';
+    printableFindings.appendChild(empty);
+  }
+  items.forEach((item, index) => {
+    const card = document.createElement('div');
+    card.className = 'print-item';
+    const heading = document.createElement('strong');
+    heading.textContent = (index + 1) + '. ' + (item.querySelector('strong')?.textContent || 'Review item');
+    const priority = document.createElement('p');
+    priority.textContent = 'Priority: ' + (item.querySelector('.severity')?.textContent || 'Review');
+    const paragraphs = Array.from(item.querySelectorAll('p')).map(p => p.textContent || '');
+    const finding = document.createElement('p');
+    finding.textContent = paragraphs[0] || '';
+    const assessment = document.createElement('p');
+    assessment.textContent = paragraphs[1] || '';
+    const action = document.createElement('p');
+    action.textContent = 'Recommended next action: ' + (paragraphs[2] || 'Verify evidence and define the next step.');
+    card.append(heading, priority, finding, assessment, action);
+    printableFindings.appendChild(card);
+  });
+  document.getElementById('printReportEvidence').textContent = evidenceNotes.value.trim() || 'No evidence notes added.';
+  const metricsOutput = document.getElementById('printReportMetrics');
+  metricsOutput.replaceChildren();
+  const labels = {performanceScore:'Performance score (0–100)',lcpValue:'LCP (seconds)',clsValue:'CLS',inpValue:'INP (milliseconds)',testReference:'Test report URL'};
+  const metricLines = performanceFields.filter(id => id !== 'testDevice' && document.getElementById(id).value.trim()).map(id => labels[id] + ': ' + document.getElementById(id).value.trim());
+  const deviceLine = 'Test device: ' + document.getElementById('testDevice').value;
+  [deviceLine, ...(metricLines.length ? metricLines : ['No performance metrics entered.'])].forEach(line => {
+    const paragraph = document.createElement('p');
+    paragraph.textContent = line;
+    metricsOutput.appendChild(paragraph);
+  });
+  status.textContent = 'Print dialog opened. Choose “Save as PDF” as the destination to create a PDF file.';
+  window.print();
+});
+document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
