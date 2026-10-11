@@ -42,6 +42,9 @@ export default {
     } catch {
       return json({ error: "Enter a complete public website URL." }, 400);
     }
+    if (target.href.length > 2048) {
+      return json({ error: "The website URL is too long. Use a URL under 2,048 characters." }, 400);
+    }
     if (!isPublicUrl(target)) {
       return json({ error: "Only public HTTP or HTTPS website URLs are allowed." }, 400);
     }
@@ -110,6 +113,7 @@ function json(data, status = 200, extraHeaders = {}) {
 function isPublicUrl(target) {
   if (!["http:", "https:"].includes(target.protocol) || !target.hostname || target.username || target.password) return false;
   const host = target.hostname.toLowerCase().replace(/^\[|\]$/g, "");
+  if (host.includes(":")) return false;
   if (host === "localhost" || host.endsWith(".localhost") || host.endsWith(".local") || host.endsWith(".internal") || /\.(example|test|invalid)$/.test(host)) return false;
   if (host === "::" || host === "::1" || /^(fc|fd|fe[89ab])/i.test(host)) return false;
   const octets = host.split(".");
