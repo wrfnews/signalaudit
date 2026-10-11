@@ -1,12 +1,13 @@
 {
   "name": "signalaudit",
   "private": true,
+  "type": "module",
   "version": "0.1.0",
   "description": "SignalAudit website and PageSpeed Insights Worker",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "check": "node --check worker.js"
+    "check": "node --check worker.js && node --test worker.test.js"
   },
   "devDependencies": {
     "wrangler": "^4.45.0"
