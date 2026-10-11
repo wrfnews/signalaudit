@@ -1,0 +1,14 @@
+{
+  "name": "signalaudit",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SignalAudit website and PageSpeed Insights Worker",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "node --check worker.js"
+  },
+  "devDependencies": {
+    "wrangler": "^4.45.0"
+  }
+}
