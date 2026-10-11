@@ -183,7 +183,7 @@ footer { padding:30px 0; border-top:1px solid var(--line); color:var(--muted); f
       <div class="audit-form">
         <form id="auditForm">
           <label for="siteUrl">Public website URL</label>
-          <div class="input-row"><input id="siteUrl" type="url" placeholder="https://your-client-site.com" required aria-describedby="urlHint"><button class="btn btn-primary" type="submit">Generate demo</button></div>
+          <div class="input-row"><input id="siteUrl" type="url" placeholder="https://your-client-site.com" required aria-describedby="urlHint"><button class="btn btn-primary" type="submit">Generate demo</button><button class="btn btn-secondary" id="resetDemo" type="button">Reset demo</button></div>
           <p class="hint" id="urlHint">Use a site you own or have permission to review. Do not enter passwords or private URLs.</p>
           <p style="margin:12px 0 0"><button class="btn btn-secondary" id="openPageSpeed" type="button">Run a real PageSpeed test ↗</button></p>
           <p class="hint">Opens Google PageSpeed Insights in a new tab. Run the test there, then enter its results below. SignalAudit does not fetch those results automatically.</p>
@@ -232,6 +232,7 @@ footer { padding:30px 0; border-top:1px solid var(--line); color:var(--muted); f
       <div class="section-head"><h2>Frequently asked questions</h2><p>Clear expectations matter more than impressive claims.</p></div>
       <div class="faq">
         <details><summary>Does the demo scan my live website?</summary><p>No. The current prototype creates illustrative sample findings in your browser. It does not make network requests or verify anything about the URL.</p></details>
+        <details><summary>Does SignalAudit store my URL or notes?</summary><p>This prototype does not send your URL, checklist, notes, or manually entered metrics to a SignalAudit server. If you open PageSpeed Insights, the URL is shared with Google for that test. The contact form opens your email app with a prepared message; it does not submit or store the message on this site.</p></details>
         <details><summary>Is this a replacement for a technical SEO audit?</summary><p>No. The intended product is a practical, evidence-backed starting point. Technical conclusions should be validated with appropriate tools and expert review.</p></details>
         <details><summary>Can agencies use reports with their own clients?</summary><p>That is a core use case to validate. Before offering white-label or client redistribution features, agree on scope, attribution, data handling and report quality.</p></details>
         <details><summary>What happens after the pilot?</summary><p>Early customers help identify which checks and report sections are genuinely useful. Automation should follow repeated customer needs, not precede validation.</p></details>
@@ -276,6 +277,14 @@ const reportList = document.getElementById('reportList');
 const evidenceNotes = document.getElementById('evidenceNotes');
 const evidencePreview = document.getElementById('evidencePreview');
 const performanceFields = ['testDevice', 'performanceScore', 'lcpValue', 'clsValue', 'inpValue', 'testReference'];
+document.getElementById('resetDemo').addEventListener('click', function () {
+  form.reset();
+  report.style.display = 'none';
+  reportList.replaceChildren();
+  evidencePreview.textContent = '';
+  status.textContent = 'Demo reset. Enter a URL and select the checks you have completed to start again.';
+  urlInput.focus();
+});
 function isPublicWebUrl(parsed) {
   if (!['http:', 'https:'].includes(parsed.protocol) || !parsed.hostname || parsed.username || parsed.password) return false;
   const host = parsed.hostname.toLowerCase().replace(/^\[|\]$/g, '');
