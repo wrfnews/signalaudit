@@ -49,6 +49,10 @@ export default {
       return json({ error: "Strategy must be mobile or desktop." }, 400);
     }
 
+    if (!env.PAGESPEED_API_KEY) {
+      return json({ error: "PageSpeed integration is not configured yet. Add the PAGESPEED_API_KEY secret in Cloudflare before using live tests." }, 503);
+    }
+
     const apiUrl = new URL("https://www.googleapis.com/pagespeedonline/v5/runPagespeed");
     apiUrl.searchParams.set("url", target.href);
     apiUrl.searchParams.set("strategy", strategy);
@@ -81,7 +85,7 @@ export default {
     const score = data.lighthouseResult?.categories?.performance?.score;
     const lcpMs = audits["largest-contentful-paint"]?.numericValue;
     const cls = audits["cumulative-layout-shift"]?.numericValue;
-    const inpField = data.loadingExperience?.metrics?.INTERACTION_TO_NEXT_PAINT_MS?.percentile;
+    const inpField = data.loadingExperience?.metrics?.INTERACTION_TO_NEXT_PAINT?.percentile ?? data.loadingExperience?.metrics?.INTERACTION_TO_NEXT_PAINT_MS?.percentile ?? data.loadingExperience?.metrics?.EXPERIMENTAL_INTERACTION_TO_NEXT_PAINT?.percentile;
     const reportUrl = data.id || "";
     return json({
       url: target.href,
