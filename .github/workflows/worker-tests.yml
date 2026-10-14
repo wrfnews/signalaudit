@@ -1,0 +1,23 @@
+name: Worker tests
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [feature/pagespeed-insights-api]
+
+permissions:
+  contents: read
+
+jobs:
+  worker-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check Worker syntax and tests
+        run: npm run check
