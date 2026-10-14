@@ -368,13 +368,20 @@ form.addEventListener('submit', function (event) {
     return;
   }
   reportDomain.textContent = parsed.hostname;
-  const metricValues = performanceFields.map(id => [id, document.getElementById(id).value.trim()]).filter(([id, value]) => value && !['testDevice'].includes(id));
+  const metricValues = ['performanceScore', 'lcpValue', 'clsValue', 'inpValue'].map(id => [id, document.getElementById(id).value.trim()]).filter(([id, value]) => value);
+  const testReference = document.getElementById('testReference').value.trim();
+  if (testReference) {
+    let referenceUrl;
+    try { referenceUrl = new URL(testReference); } catch (_) { status.textContent = 'Enter a complete test report URL, including https://.'; report.style.display = 'none'; document.getElementById('testReference').focus(); return; }
+    if (!isPublicWebUrl(referenceUrl)) { status.textContent = 'Use a valid public http or https URL for the test report.'; report.style.display = 'none'; document.getElementById('testReference').focus(); return; }
+  }
   const scoreInput = document.getElementById('performanceScore');
   if (scoreInput.value !== '' && (+scoreInput.value < 0 || +scoreInput.value > 100)) { status.textContent = 'Performance score must be between 0 and 100.'; report.style.display = 'none'; scoreInput.focus(); return; }
   if (['lcpValue', 'clsValue', 'inpValue'].some(id => document.getElementById(id).value !== '' && +document.getElementById(id).value < 0)) { status.textContent = 'Performance metrics cannot be negative.'; report.style.display = 'none'; return; }
   const evidenceParts = [];
   if (evidenceNotes.value.trim()) evidenceParts.push('Your evidence notes: ' + evidenceNotes.value.trim());
-  if (metricValues.length) evidenceParts.push('Manually entered performance evidence (' + document.getElementById('testDevice').value + '): ' + metricValues.map(([id, value]) => ({performanceScore:'Score',lcpValue:'LCP seconds',clsValue:'CLS',inpValue:'INP milliseconds',testReference:'Test report URL'}[id] + ': ' + value)).join('; '));
+  if (metricValues.length) evidenceParts.push('Manually entered performance metrics (' + document.getElementById('testDevice').value + '): ' + metricValues.map(([id, value]) => ({performanceScore:'Score',lcpValue:'LCP seconds',clsValue:'CLS',inpValue:'INP milliseconds'}[id] + ': ' + value)).join('; '));
+  if (testReference) evidenceParts.push('Test report URL supplied (not independently verified): ' + testReference);
   evidencePreview.textContent = evidenceParts.length ? evidenceParts.join(' | ') : 'No evidence notes or performance metrics added yet. Add verified observations before sharing this draft.';
   const selected = Array.from(form.querySelectorAll('input[name="finding"]:checked')).map(input => findingDetails[input.value]);
   reportList.replaceChildren();
@@ -396,7 +403,13 @@ form.addEventListener('submit', function (event) {
       const note = document.createElement('p');
       note.textContent = item.note;
       const details = document.createElement('p');
-      details.textContent = 'Potential impact: ' + item.impact + ' Effort: ' + item.effort + '. Evidence status: ' + (evidenceNotes.value.trim() ? 'Notes supplied; not independently verified.' : 'Evidence not yet recorded.');
+      const hasPerformanceMetrics = ['performanceScore', 'lcpValue', 'clsValue', 'inpValue'].some(id => document.getElementById(id).value.trim() !== '');
+      const evidenceStatusParts = [];
+      if (evidenceNotes.value.trim()) evidenceStatusParts.push('Evidence notes supplied; relevance to this finding is not independently verified.');
+      if (hasPerformanceMetrics) evidenceStatusParts.push('Performance metrics supplied; relevance to this finding is not verified.');
+      if (!evidenceStatusParts.length && testReference) evidenceStatusParts.push('Test report URL supplied; findings are not independently verified.');
+      const evidenceStatus = evidenceStatusParts.join(' ') || 'Evidence not yet recorded.';
+      details.textContent = 'Potential impact: ' + item.impact + ' Effort: ' + item.effort + '. Evidence status: ' + evidenceStatus;
       const action = document.createElement('p');
       action.textContent = 'Recommended next action: ' + item.action;
       content.append(title, note, details, action);
@@ -415,8 +428,9 @@ function buildReportText() {
     return (index + 1) + '. ' + title + '\n   Finding: ' + (paragraphs[0] || '') + '\n   Assessment: ' + (paragraphs[1] || '') + '\n   Recommended next action: ' + (paragraphs[2] || '');
   });
   const evidence = evidenceNotes.value.trim();
-  const metrics = performanceFields.map(id => [id, document.getElementById(id).value.trim()]).filter(([id, value]) => value && id !== 'testDevice').map(([id, value]) => ({performanceScore:'Performance score (0–100)',lcpValue:'LCP (seconds)',clsValue:'CLS',inpValue:'INP (milliseconds)',testReference:'Test report URL'}[id] + ': ' + value));
-  return 'SignalAudit draft report for ' + reportDomain.textContent + '\nGenerated: ' + new Date().toLocaleString() + '\n\n' + (rows.length ? rows.join('\n\n') : 'No review items selected.') + '\n\nEvidence and observations:\n' + (evidence || 'None added.') + '\n\nPerformance evidence (' + document.getElementById('testDevice').value + '):\n' + (metrics.length ? metrics.join('\n') : 'No performance metrics entered.') + '\n\nDraft only. No live website scan was performed by SignalAudit. Performance values are user-entered and have not been independently verified.';
+  const metrics = ['performanceScore', 'lcpValue', 'clsValue', 'inpValue'].map(id => [id, document.getElementById(id).value.trim()]).filter(([id, value]) => value).map(([id, value]) => ({performanceScore:'Performance score (0–100)',lcpValue:'LCP (seconds)',clsValue:'CLS',inpValue:'INP (milliseconds)'}[id] + ': ' + value));
+  const testReference = document.getElementById('testReference').value.trim();
+  return 'SignalAudit draft report for ' + reportDomain.textContent + '\nGenerated: ' + new Date().toLocaleString() + '\n\n' + (rows.length ? rows.join('\n\n') : 'No review items selected.') + '\n\nEvidence and observations:\n' + (evidence || 'None added.') + '\n\nPerformance metrics (' + document.getElementById('testDevice').value + '):\n' + (metrics.length ? metrics.join('\n') : 'No performance metrics entered.') + '\n\nTest report URL (not independently verified):\n' + (testReference || 'None supplied.') + '\n\nDraft only. No live website scan was performed by SignalAudit. Performance values are user-entered and have not been independently verified.';
 }
 document.getElementById('copyReport').addEventListener('click', async function () {
   const text = buildReportText();
